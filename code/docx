@@ -1,0 +1,127 @@
+from docx import Document
+from docx.shared import Pt, Cm
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.oxml.ns import qn
+
+# 图书管理系统设计说明书（中式优化版）
+# pip install python-docx
+
+
+doc=Document()
+sec=doc.sections[0]
+sec.top_margin=Cm(2.5)
+sec.bottom_margin=Cm(2.5)
+sec.left_margin=Cm(3)
+sec.right_margin=Cm(2.5)
+
+
+def font(run,size=12,bold=False,name='宋体'):
+    run.font.name=name
+    run._element.rPr.rFonts.set(qn('w:eastAsia'),name)
+    run.font.size=Pt(size)
+    run.bold=bold
+
+# =====封面======
+for i in range(4):
+    doc.add_paragraph()
+
+p=doc.add_paragraph()
+p.alignment=1
+r=p.add_run('图书管理系统\n')
+font(r,26,True,'黑体')
+
+r=p.add_run('Library Management System\n')
+font(r,14,False,'微软雅黑')
+
+r=p.add_run('系统设计说明书')
+font(r,18,True,'微软雅黑')
+
+for i in range(4):
+    doc.add_paragraph()
+
+t=doc.add_table(rows=6,cols=2)
+info=[
+('课程名称','数据结构课程设计'),
+('专业','XXX'),
+('姓名','XXX'),
+('学号','XXXXXXXX'),
+('指导教师','XXX'),
+('日期','2026年5月')
+]
+for i,(k,v) in enumerate(info):
+    t.cell(i,0).text=k
+    t.cell(i,1).text=v
+
+p=doc.add_paragraph()
+p.alignment=1
+r=p.add_run('\nBuild Better Digital Library Services')
+font(r,10,False,'微软雅黑')
+
+doc.add_page_break()
+
+#目录
+h=doc.add_heading('目录',1)
+font(h.runs[0],16,True,'黑体')
+for x in ['1 项目概述','2 系统功能模块设计','3 数据结构设计','4 系统流程设计','5 实验结果','6 项目体会','7 参考文献','8 附录']:
+    p=doc.add_paragraph(x)
+    font(p.runs[0],12,False,'宋体')
+
+doc.add_page_break()
+
+chapters=[
+('第1章 项目概述',[
+('1.1 项目背景','随着信息技术的发展，传统图书管理方式效率较低，因此设计一套数字化图书管理系统。'),
+('1.2 开发目标','① 图书管理\n② 用户管理\n③ 借阅管理\n④ 查询统计')]),
+
+('第2章 系统功能模块设计',[
+('2.1 系统总体结构图','【插入系统结构图】'),
+('2.2 模块功能说明','')]),
+
+('第3章 数据结构设计',[
+('3.1 数据结构定义','typedef struct Book{\n int id;\n char name[50];\n char author[30];\n float price;\n int state;\n}Book;'),
+('3.2 数据结构说明','采用链表结构动态管理图书信息')]),
+
+('第4章 系统流程设计',[
+('4.1 登录流程图','【插入流程图】'),
+('4.2 借书流程图','【插入流程图】')]),
+
+('第5章 实验结果',[
+('5.1 输入','请输入图书编号：1001'),
+('5.2 输出','借阅成功')]),
+
+('第6章 项目体会',[
+('总结','通过本次课程设计，进一步掌握了数据结构在实际项目中的应用。')]),
+
+('第7章 参考文献',[
+('参考文献','[1] 严蔚敏.数据结构\n[2] 谭浩强.C程序设计')]),
+
+('第8章 附录',[
+('附录A 程序源代码','在此粘贴代码')])
+]
+
+for title,subs in chapters:
+    h=doc.add_heading('',1)
+    rr=h.add_run(title)
+    font(rr,16,True,'黑体')
+
+    for st,content in subs:
+        p=doc.add_paragraph()
+        r=p.add_run(st)
+        font(r,13,True,'微软雅黑')
+
+        if '模块功能说明' in st:
+            tb=doc.add_table(rows=4,cols=4)
+            data=[['模块','功能','输入','输出'],['图书管理','增删改查','图书信息','提示'],['用户管理','登录注册','账号密码','状态'],['借阅管理','借还书','图书编号','结果']]
+            for i in range(4):
+                for j in range(4):
+                    tb.cell(i,j).text=data[i][j]
+        else:
+            p=doc.add_paragraph(content)
+            p.style='Normal'
+
+        doc.add_paragraph()
+
+sec.footer.paragraphs[0].text='Library Management System'
+
+doc.save('图书管理系统设计说明书_中式版.docx')
+print('生成完成')

@@ -1,0 +1,51 @@
+from PIL import Image
+import os
+
+MAX_SIZE = 1024 * 1024   # 1MB
+
+input_path = r"C:\Users\wang\Pictures\Screenshots\屏幕截图 2026-05-21 225703.png"
+output_path = r"C:\Users\wang\Pictures\Screenshots\压缩后.jpg"
+
+
+img = Image.open(input_path)
+
+if img.mode in ("RGBA", "P"):
+    img = img.convert("RGB")
+
+width, height = img.size
+quality = 95
+
+while True:
+
+    img.save(
+        output_path,
+        "JPEG",
+        quality=quality,
+        optimize=True
+    )
+
+    size = os.path.getsize(output_path)
+
+    print(
+        f"质量:{quality} "
+        f"尺寸:{width}x{height} "
+        f"大小:{size/1024:.2f}KB"
+    )
+
+    if size <= MAX_SIZE:
+        print("\n压缩完成")
+        print("输出：", output_path)
+        break
+
+    if quality > 20:
+        quality -= 5
+    else:
+        width = int(width * 0.9)
+        height = int(height * 0.9)
+
+        img = img.resize(
+            (width, height),
+            Image.LANCZOS
+        )
+
+        quality = 95

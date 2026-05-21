@@ -1,0 +1,54 @@
+import random
+from datetime import date, timedelta
+
+# 基础图书模板（书名、作者、出版社、分类号）
+categories = [
+    ("I247", "活着", "余华", "作家出版社"),
+    ("I565", "悲惨世界", "维克多·雨果", "人民文学出版社"),
+    ("I561", "傲慢与偏见", "简·奥斯汀", "译林出版社"),
+    ("I313", "挪威的森林", "村上春树", "上海译文出版社"),
+    ("J228", "海贼王", "尾田荣一郎", "浙江人民美术出版社"),
+    ("J228", "名侦探柯南", "青山刚昌", "长春出版社"),
+    ("I287", "安徒生童话", "安徒生", "人民文学出版社"),
+    ("N49", "时间简史", "史蒂芬·霍金", "湖南科技出版社"),
+    ("B842", "梦的解析", "西格蒙德·弗洛伊德", "商务印书馆"),
+    ("G8", "篮球技巧大全", "李强", "北京体育大学出版社"),
+    ("TS", "健康生活指南", "王晨", "中国轻工业出版社"),
+    ("TP", "Python程序设计", "张伟,李明", "清华大学出版社"),
+    ("F27", "管理学原理", "周三多", "高等教育出版社"),
+    ("Z4", "读者", "读者杂志社", "读者出版社"),
+]
+
+output_file = "图书列表200册.txt"
+lines = ["图书列表（约200册）\n\n"]
+
+base_date = date(2015, 1, 1)
+
+for i in range(200):
+    c = categories[i % len(categories)]
+    pub_date = base_date + timedelta(days=i*17)
+    price = round(random.uniform(22, 128), 1)  # 合理定价
+    hot = max(0, min(10, 10 - (i % 14)))       # 馆藏数 0~10
+    isbn = f"9787{100000000 + i:09d}"
+    edition = f"第{random.randint(1,8)}版"
+    book_id = f"BK{10001 + i}"
+    book_name = f"{c[1]} 第{i//14 + 1}辑"
+
+    txt = f"""中图法分类号: {c[0]}
+图书编号: {book_id}
+书名: {book_name}
+作者: {c[2]}
+出版社: {c[3]}
+出版日期: {pub_date}
+ISBN: {isbn}
+版次: {edition}
+定价: {price}元
+馆藏数: {hot}
+
+"""
+    lines.append(txt)
+
+with open(output_file, "w", encoding="utf-8") as f:
+    f.writelines(lines)
+
+print(f"图书列表已生成到文件: {output_file}")

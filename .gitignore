@@ -1,0 +1,9 @@
+# Binary files
+*.exe
+
+# Runtime data files
+data/*.dat
+
+# Editor files
+.vscode/
+.idea/
