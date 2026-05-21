@@ -372,8 +372,8 @@ void book_print(BookNode *book)
     printf("  ║  已借出:   %-34d ║\n", b->borrowed_count);
     printf("  ║  在馆数:   %-34d ║\n", book_available(book));
     printf("  ╚══════════════════════════════════════════════╝\n");
+    book_print_authors(b->authors);
 }
-
 int book_available(BookNode *book)
 {
     return book->info.total_copies - book->info.borrowed_count;
